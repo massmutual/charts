@@ -1,4 +1,4 @@
-CHART_REPO := http://chartmuseum.build.cd.jenkins-x.io
+CHART_REPO := https://chartmuseum.build.cd.jenkins-x.io
 NAME := jenkins
 OS := $(shell uname)
 RELEASE_VERSION := $(shell jx-release-version)

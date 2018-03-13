@@ -34,6 +34,9 @@ data:
             <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
               <inheritFrom></inheritFrom>
               <name>{{ $pval.Name }}</name>
+{{- if $pval.ServiceAccount }}
+              <serviceAccount>{{ $pval.ServiceAccount }}</serviceAccount>
+{{- end }}
               <instanceCap>2147483647</instanceCap>
               <idleMinutes>0</idleMinutes>
               <label>{{ $pval.Label }}</label>
