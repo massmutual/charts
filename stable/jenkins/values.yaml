@@ -18,6 +18,13 @@ Master:
 # JavaOpts: "-Xms512m -Xmx512m"
 # JenkinsOpts: ""
 # JenkinsUriPrefix: "/jenkins"
+# Environment variables that get added to the init container (useful for e.g. http_proxy)
+# InitContainerEnv:
+#   - name: http_proxy
+#     value: "http://192.168.64.1:3128"
+# ContainerEnv:
+#   - name: http_proxy
+#     value: "http://192.168.64.1:3128"
   ServicePort: 8080
 # For minikube, set this to NodePort, elsewhere use LoadBalancer
 # Use ClusterIP if your setup includes ingress controller
