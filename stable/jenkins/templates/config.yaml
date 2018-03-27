@@ -126,6 +126,20 @@ data:
       <globalNodeProperties/>
       <noUsageStatistics>true</noUsageStatistics>
     </hudson>
+  org.jenkinsci.plugin.gitea.servers.GiteaServers.xml: |-
+    <?xml version='1.1' encoding='UTF-8'?>
+    <org.jenkinsci.plugin.gitea.servers.GiteaServers plugin="gitea@1.0.5">
+      <servers>
+{{- range $pkey, $pval := .Values.Servers.Gitea }}
+        <org.jenkinsci.plugin.gitea.servers.GiteaServer>
+          <displayName>{{ $pval.Name }}</displayName>
+          <serverUrl>{{ $pval.Url }}</serverUrl>
+          <manageHooks>true</manageHooks>
+          <credentialsId>{{ $pval.Credential }}</credentialsId>
+        </org.jenkinsci.plugin.gitea.servers.GiteaServer>
+{{- end }}
+      </servers>
+    </org.jenkinsci.plugin.gitea.servers.GiteaServers>
 {{- if .Values.Master.ScriptApproval }}
   scriptapproval.xml: |-
     <?xml version='1.0' encoding='UTF-8'?>

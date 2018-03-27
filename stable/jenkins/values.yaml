@@ -115,6 +115,11 @@ Agent:
       #   mountPath: /var/myapp/mysecret
       NodeSelector: {}
 
+Servers:
+  Gitea:
+  - Name: gitea
+    Url: http://gitea.changeme.com
+    Credential: jenkins-x-gitea
 
 Persistence:
   Enabled: true
