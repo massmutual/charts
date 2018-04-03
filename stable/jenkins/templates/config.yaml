@@ -126,6 +126,18 @@ data:
       <globalNodeProperties/>
       <noUsageStatistics>true</noUsageStatistics>
     </hudson>
+  org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml: |-
+    <?xml version='1.1' encoding='UTF-8'?>
+    <org.jenkinsci.plugins.github__branch__source.GitHubConfiguration plugin="github-branch-source@2.3.2">
+      <endpoints>
+{{- range $pkey, $pval := .Values.Servers.GHE }}
+        <org.jenkinsci.plugins.github__branch__source.Endpoint>
+          <name>{{ $pval.Name }}</name>
+          <apiUri>{{ $pval.Url }}</apiUri>
+        </org.jenkinsci.plugins.github__branch__source.Endpoint>
+{{- end }}
+      </endpoints>
+    </org.jenkinsci.plugins.github__branch__source.GitHubConfiguration>
   org.jenkinsci.plugin.gitea.servers.GiteaServers.xml: |-
     <?xml version='1.1' encoding='UTF-8'?>
     <org.jenkinsci.plugin.gitea.servers.GiteaServers plugin="gitea@1.0.5">
@@ -168,6 +180,7 @@ data:
     echo "false" > /usr/share/jenkins/ref/secrets/slave-to-master-security-kill-switch;
     cp -n /var/jenkins_config/config.xml /var/jenkins_home;
     cp -n /var/jenkins_config/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml /var/jenkins_home;
+    cp -n /var/jenkins_config/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml /var/jenkins_home;
 {{- if .Values.Master.ScriptApproval }}
     cp -n /var/jenkins_config/scriptapproval.xml /var/jenkins_home/scriptApproval.xml;
 {{- end }}
