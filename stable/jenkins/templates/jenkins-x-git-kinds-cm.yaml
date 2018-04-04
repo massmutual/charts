@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: "jenkins-x-git-kinds"
 data:
-  githubEnterprise: |-
+  github: |-
 {{- range $pkey, $pval := .Values.Servers.GHE }}
     {{ $pval.Name }}: "{{ $pval.Url }}"
 {{- end }}
