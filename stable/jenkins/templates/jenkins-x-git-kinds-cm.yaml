@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "jenkins-x-git-kinds"
+data:
+  githubEnterprise: |-
+{{- range $pkey, $pval := .Values.Servers.GHE }}
+    {{ $pval.Name }}: "{{ $pval.Url }}"
+{{- end }}
+  gitea: |-
+{{- range $pkey, $pval := .Values.Servers.Gitea }}
+    {{ $pval.Name }}: "{{ $pval.Url }}"
+{{- end }}
