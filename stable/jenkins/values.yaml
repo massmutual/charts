@@ -116,10 +116,14 @@ Agent:
       NodeSelector: {}
 
 Servers:  
-  Gitea:
-  - Name: gitea
-    Url: http://gitea.changeme.com
-    Credential: jenkins-x-gitea
+  #Gitea:
+  #- Name: gitea
+  #  Url: http://gitea.changeme.com
+  #  Credential: jenkins-x-gitea
+  #
+  # GHE
+  # BitbucketCloud
+  # BitbucketServer
 
 Persistence:
   Enabled: true

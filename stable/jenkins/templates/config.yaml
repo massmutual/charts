@@ -138,6 +138,28 @@ data:
 {{- end }}
       </endpoints>
     </org.jenkinsci.plugins.github__branch__source.GitHubConfiguration>
+  com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml: |-
+    <?xml version='1.1' encoding='UTF-8'?>
+    <com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration plugin="cloudbees-bitbucket-branch-source@2.2.10">
+      <endpoints>
+{{- range $pkey, $pval := .Values.Servers.BitbucketCloud }}
+        <com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketCloudEndpoint>
+          <manageHooks>true</manageHooks>
+          <credentialsId>{{ $pval.Credential }}</credentialsId>
+          <displayName>{{ $pval.Name }}</displayName>
+          <serverUrl>{{ $pval.Url }}</serverUrl>
+        </com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketCloudEndpoint>
+{{- end }}
+{{- range $pkey, $pval := .Values.Servers.BitbucketServer }}
+        <com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketServerEndpoint>
+          <manageHooks>true</manageHooks>
+          <credentialsId>{{ $pval.Credential }}</credentialsId>
+          <displayName>{{ $pval.Name }}</displayName>
+          <serverUrl>{{ $pval.Url }}</serverUrl>
+        </com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketServerEndpoint>
+{{- end }}
+      </endpoints>
+    </com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration>
   org.jenkinsci.plugin.gitea.servers.GiteaServers.xml: |-
     <?xml version='1.1' encoding='UTF-8'?>
     <org.jenkinsci.plugin.gitea.servers.GiteaServers plugin="gitea@1.0.5">
@@ -170,17 +192,19 @@ data:
     </scriptApproval>
 {{- end }}
   apply_config.sh: |-
-{{- if .Values.Master.Overwrite.Config }}
-    rm -rf /var/jenkins_home/config.xml
-{{- end }}
 {{- if .Values.Master.Overwrite.Plugins }}
     rm -rf /var/jenkins_home/plugins
 {{- end }}
     mkdir -p /usr/share/jenkins/ref/secrets/;
     echo "false" > /usr/share/jenkins/ref/secrets/slave-to-master-security-kill-switch;
-    cp -n /var/jenkins_config/config.xml /var/jenkins_home;
-    cp -n /var/jenkins_config/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml /var/jenkins_home;
-    cp -n /var/jenkins_config/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml /var/jenkins_home;
+    rm -rf /var/jenkins_home/config.xml
+    ln -s /var/jenkins_config/config.xml /var/jenkins_home/config.xml
+    rm -rf /var/jenkins_home/com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml
+    ln -s /var/jenkins_config/com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml /var/jenkins_home/com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml
+    rm -rf /var/jenkins_home/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml
+    ln -s /var/jenkins_config/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml /var/jenkins_home/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml
+    rm -rf /var/jenkins_home/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml
+    ln -s /var/jenkins_config/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml /var/jenkins_home/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml
 {{- if .Values.Master.ScriptApproval }}
     cp -n /var/jenkins_config/scriptapproval.xml /var/jenkins_home/scriptApproval.xml;
 {{- end }}
