@@ -138,6 +138,27 @@ data:
 {{- end }}
       </endpoints>
     </org.jenkinsci.plugins.github__branch__source.GitHubConfiguration>
+  com.dabsquared.gitlabjenkins.connection.GitLabConnectionConfig.xml: |-
+    <?xml version='1.1' encoding='UTF-8'?>
+    <com.dabsquared.gitlabjenkins.connection.GitLabConnectionConfig plugin="gitlab-plugin@1.5.5">
+      <useAuthenticatedEndpoint>true</useAuthenticatedEndpoint>
+      <connections>
+{{- range $pkey, $pval := .Values.Servers.GitLab }}
+        <com.dabsquared.gitlabjenkins.connection.GitLabConnection>
+          <name>{{ $pval.Name }}</name>
+          <url>{{ $pval.Url }}</url>
+          <apiTokenId>{{ $pval.Credential }}</apiTokenId>
+          <clientBuilder class="com.dabsquared.gitlabjenkins.gitlab.api.impl.AutodetectGitLabClientBuilder">
+            <id>autodetect</id>
+            <ordinal>0</ordinal>
+          </clientBuilder>
+          <ignoreCertificateErrors>false</ignoreCertificateErrors>
+          <connectionTimeout>10</connectionTimeout>
+          <readTimeout>10</readTimeout>
+        </com.dabsquared.gitlabjenkins.connection.GitLabConnection>
+{{- end }}
+      </connections>
+    </com.dabsquared.gitlabjenkins.connection.GitLabConnectionConfig>
   com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml: |-
     <?xml version='1.1' encoding='UTF-8'?>
     <com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration plugin="cloudbees-bitbucket-branch-source@2.2.10">
@@ -203,6 +224,8 @@ data:
     ln -s /var/jenkins_config/com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml /var/jenkins_home/com.cloudbees.jenkins.plugins.bitbucket.endpoints.BitbucketEndpointConfiguration.xml
     rm -rf /var/jenkins_home/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml
     ln -s /var/jenkins_config/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml /var/jenkins_home/org.jenkinsci.plugin.gitea.servers.GiteaServers.xml
+    rm -rf /var/jenkins_home/com.dabsquared.gitlabjenkins.connection.GitLabConnectionConfig.xml
+    ln -s /var/jenkins_config/com.dabsquared.gitlabjenkins.connection.GitLabConnectionConfig.xml /var/jenkins_home/com.dabsquared.gitlabjenkins.connection.GitLabConnectionConfig.xml
     rm -rf /var/jenkins_home/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml
     ln -s /var/jenkins_config/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml /var/jenkins_home/org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml
 {{- if .Values.Master.ScriptApproval }}

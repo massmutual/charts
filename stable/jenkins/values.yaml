@@ -136,6 +136,11 @@ Servers:
   #  Url: https://something.com/
   #  Credential: some-cred-name
 
+  GitLab:
+  #- Name: myname
+  #  Url: https://something.com/
+  #  Credential: some-cred-name
+
 Persistence:
   Enabled: true
   ## A manually managed Persistent Volume and Claim
