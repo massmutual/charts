@@ -4,9 +4,10 @@ Jenkins master and slave cluster utilizing the Jenkins Kubernetes plugin
 
 * https://wiki.jenkins-ci.org/display/JENKINS/Kubernetes+Plugin
 
-Inspired by the awesome work of Carlos Sanchez <carlos@apache.org>
+Inspired by the awesome work of Carlos Sanchez <mailto:carlos@apache.org>
 
 ## Chart Details
+
 This chart will do the following:
 
 * 1 x Jenkins Master with port 8080 exposed on an external LoadBalancer
@@ -25,7 +26,6 @@ $ helm install --name my-release stable/jenkins
 The following tables lists the configurable parameters of the Jenkins chart and their default values.
 
 ### Jenkins Master
-
 | Parameter                         | Description                          | Default                                                                      |
 | --------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------- |
 | `Master.Name`                     | Jenkins master name                  | `jenkins-master`                                                             |
@@ -37,6 +37,8 @@ The following tables lists the configurable parameters of the Jenkins chart and 
 | `Master.AdminUser`                | Admin username (and password) created as a secret if useSecurity is true | `admin`                                  |
 | `Master.Cpu`                      | Master requested cpu                 | `200m`                                                                       |
 | `Master.Memory`                   | Master requested memory              | `256Mi`                                                                      |
+| `Master.InitContainerEnv`         | Environment variables for Init Container                                 | Not set                                  |
+| `Master.ContainerEnv`             | Environment variables for Jenkins Container                              | Not set                                  |
 | `Master.ServiceType`              | k8s service type                     | `LoadBalancer`                                                               |
 | `Master.ServicePort`              | k8s service port                     | `8080`                                                                       |
 | `Master.NodePort`                 | k8s node port                        | Not set                                                                      |
@@ -124,12 +126,12 @@ It is possible to mount several volumes using `Persistence.volumes` and `Persist
 | `Persistence.volumes`       | Additional volumes              | `nil`           |
 | `Persistence.mounts`        | Additional mounts               | `nil`           |
 
-
 #### Existing PersistentVolumeClaim
 
 1. Create the PersistentVolume
 1. Create the PersistentVolumeClaim
 1. Install the chart
+
 ```bash
 $ helm install --name my-release --set Persistence.ExistingClaim=PVC_NAME stable/jenkins
 ```
@@ -141,7 +143,7 @@ It also allows for providing additional xml configuration files that will be cop
 set the value to true and provide the file `templates/config.yaml` for your use case. If you start by copying `config.yaml` from this chart and
 want to access values from this chart you must change all references from `.Values` to `.Values.jenkins`.
 
-```
+```yaml
 jenkins:
   Master:
     CustomConfigMap: true
@@ -154,3 +156,30 @@ If running upon a cluster with RBAC enabled you will need to do the following:
 * `helm install stable/jenkins --set rbac.install=true`
 * Create a Jenkins credential of type Kubernetes service account with service account name provided in the `helm status` output.
 * Under configure Jenkins -- Update the credentials config in the cloud section to use the service account credential you created in the step above.
+
+## Running behind a forward proxy
+
+The master pod uses an Init Container to install plugins etc. If you are behind a corporate proxy it may be useful to set `Master.InitContainerEnv` to add environment variables such as `http_proxy`, so that these can be downloaded.
+
+Additionally, you may want to add env vars for the Jenkins container, and the JVM (`Master.JavaOpts`).
+
+```yaml
+Master:
+  InitContainerEnv:
+    - name: http_proxy
+      value: "http://192.168.64.1:3128"
+    - name: https_proxy
+      value: "http://192.168.64.1:3128"
+    - name: no_proxy
+      value: ""
+  ContainerEnv:
+    - name: http_proxy
+      value: "http://192.168.64.1:3128"
+    - name: https_proxy
+      value: "http://192.168.64.1:3128"
+  JavaOpts: >-
+    -Dhttp.proxyHost=192.168.64.1
+    -Dhttp.proxyPort=3128
+    -Dhttps.proxyHost=192.168.64.1
+    -Dhttps.proxyPort=3128
+```
