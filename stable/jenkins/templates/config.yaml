@@ -123,7 +123,23 @@ data:
       <slaveAgentPort>50000</slaveAgentPort>
       <label></label>
       <nodeProperties/>
-      <globalNodeProperties/>
+      <globalNodeProperties>
+        <hudson.slaves.EnvironmentVariablesNodeProperty>
+          <envVars serialization="custom">
+            <unserializable-parents/>
+            <tree-map>
+              <default>
+                <comparator class="hudson.util.CaseInsensitiveComparator"/>
+              </default>
+              <int>1</int>
+{{- range $ekey, $eval := .Values.Global.EnvVars }}
+              <string>{{ $ekey }}</string>
+              <string>{{ $eval }}</string>
+{{- end }}
+            </tree-map>
+          </envVars>
+        </hudson.slaves.EnvironmentVariablesNodeProperty>
+      </globalNodeProperties>
       <noUsageStatistics>true</noUsageStatistics>
     </hudson>
   org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml: |-

@@ -82,6 +82,11 @@ Master:
     # Plugins: true
     # Config: true
 
+# global node properties
+Global:
+  EnvVars:
+    DOCKER_REGISTRY: ""
+
 Agent:
   Enabled: true
   ContainerCap: 10
