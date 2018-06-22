@@ -3,7 +3,7 @@
 apiVersion: rbac.authorization.k8s.io/{{ required "A valid .Values.rbac.apiVersion entry required!" .Values.rbac.apiVersion }}
 kind: ClusterRoleBinding
 metadata:
-  name: {{ $serviceName }}-role-binding
+  name: {{ $serviceName }}-{{ .Release.Namespace }}-role-binding
   labels:
     app: {{ $serviceName }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
