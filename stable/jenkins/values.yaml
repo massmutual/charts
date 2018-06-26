@@ -92,7 +92,6 @@ Agent:
   ContainerCap: 10
   Component: "jenkins-agent"
 
-  DockerSocket: true
   DockerHostPath: "/var/run/docker.sock"
   DockerMountPath: "/var/run/docker.sock"
 

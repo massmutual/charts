@@ -49,7 +49,7 @@ data:
                   {{- $_ := set $local "first" false }}
                 {{- end }}</nodeSelector>
               <volumes>
-{{- if $agent.DockerSocket }}
+{{- if $agent.DockerHostPath }}
                 <org.csanchez.jenkins.plugins.kubernetes.volumes.HostPathVolume>
                   <hostPath>{{ $agent.DockerHostPath }}</hostPath>
                   <mountPath>{{ $agent.DockerMountPath }}</mountPath>
