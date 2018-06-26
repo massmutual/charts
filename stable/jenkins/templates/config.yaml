@@ -29,6 +29,7 @@ data:
         <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@0.11">
           <name>kubernetes</name>
           <templates>
+{{- $agent := .Values.Agent -}}
 {{- if .Values.Agent.Enabled }}
 {{- range $pkey, $pval := .Values.Agent.PodTemplates }}
             <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
@@ -48,10 +49,10 @@ data:
                   {{- $_ := set $local "first" false }}
                 {{- end }}</nodeSelector>
               <volumes>
-{{- if .Values.Agent.DockerHostPath }}
+{{- if $agent.DockerSocket }}
                 <org.csanchez.jenkins.plugins.kubernetes.volumes.HostPathVolume>
-                  <hostPath>{{ ..Values.Agent.DockerHostPath }}</hostPath>
-                  <mountPath>{ ..Values.Agent.DockerMountPath }}</mountPath>
+                  <hostPath>{{ $agent.DockerHostPath }}</hostPath>
+                  <mountPath>{{ $agent.DockerMountPath }}</mountPath>
                 </org.csanchez.jenkins.plugins.kubernetes.volumes.HostPathVolume>
 {{- end }}
 {{- range $index, $volume := $pval.volumes }}

@@ -92,6 +92,10 @@ Agent:
   ContainerCap: 10
   Component: "jenkins-agent"
 
+  DockerSocket: true
+  DockerHostPath: "/var/run/docker.sock"
+  DockerMountPath: "/var/run/docker.sock"
+
   # Key Value selectors. Ex:
   # jenkins-agent: v1
   PodTemplates:
