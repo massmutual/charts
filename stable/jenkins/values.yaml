@@ -95,6 +95,8 @@ Agent:
   DockerHostPath: "/var/run/docker.sock"
   DockerMountPath: "/var/run/docker.sock"
 
+  KubernetesServerURL: "https://kubernetes.default"
+
   # Key Value selectors. Ex:
   # jenkins-agent: v1
   PodTemplates:
