@@ -43,11 +43,6 @@ spec:
           command: [ "sh", "/var/jenkins_config/apply_config.sh" ]
           {{- if .Values.Master.InitContainerEnv }}
           env:
-            - name: DOCKER_REGISTRY
-              valueFrom:
-                configMapKeyRef:
-                  name: jenkins-x-docker-registry
-                  key: docker.registry
 {{ toYaml .Values.Master.InitContainerEnv | indent 12 }}
           {{- end }}
           volumeMounts:
@@ -81,6 +76,11 @@ spec:
               path: "/login"
               port: {{ .Values.Master.ContainerPort }}
           env:
+            - name: DOCKER_REGISTRY
+              valueFrom:
+                configMapKeyRef:
+                  name: jenkins-x-docker-registry
+                  key: docker.registry
             - name: JAVA_OPTS
               value: "{{ default "" .Values.Master.JavaOpts}}"
             - name: JENKINS_OPTS
