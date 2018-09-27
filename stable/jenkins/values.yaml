@@ -82,11 +82,6 @@ Master:
     # Plugins: true
     # Config: true
 
-# global node properties
-Global:
-  EnvVars:
-    DOCKER_REGISTRY: ""
-
 Agent:
   Enabled: true
   ContainerCap: 10
@@ -157,6 +152,14 @@ Servers:
   #- Name: myname
   #  Url: https://something.com/
   #  Credential: some-cred-name
+
+  # global node properties
+  Global:
+    NumEnvVars: 2
+    EnvVars:
+      DOCKER_REGISTRY: ""
+      TILLER_NAMESPACE: ""
+
 
 Persistence:
   Enabled: true

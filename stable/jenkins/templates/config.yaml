@@ -138,8 +138,8 @@ data:
               <default>
                 <comparator class="hudson.util.CaseInsensitiveComparator"/>
               </default>
-              <int>1</int>
-{{- range $ekey, $eval := .Values.Global.EnvVars }}
+              <int>{{ .Values.Servers.Global.NumEnvVars }}</int>
+{{- range $ekey, $eval := .Values.Servers.Global.EnvVars }}
               <string>{{ $ekey }}</string>
               <string>{{ $eval }}</string>
 {{- end }}
