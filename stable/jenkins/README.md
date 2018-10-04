@@ -34,6 +34,11 @@ The following tables lists the configurable parameters of the Jenkins chart and 
 | `Master.ImagePullPolicy`          | Master image pull policy             | `Always`                                                                     |
 | `Master.Component`                | k8s selector key                     | `jenkins-master`                                                             |
 | `Master.UseSecurity`              | Use basic security                   | `true`                                                                       |
+| `Master.AuthorizationStrategyClass`              | AuthorizationStrategy class                   | `hudson.security.FullControlOnceLoggedInAuthorizationStrategy`                                                                       |
+| `Master.AuthorizationStrategyAttributes`              | List of authorization strategy attributes                   | `denyAnonymousReadAccess: true`                                                                       |
+| `Master.SecurityRealmClass`              | SecurityRealmClass class                   | `hudson.security.LegacySecurityRealm`                                                                       |
+| `Master.SecurityRealmAttributes`              | List of security realm attributes                   | `{}`                                                                       |
+| `Master.ServiceAccountAnnotations`              | Annotations to add to the service account                  | `{}`                                                                       |
 | `Master.AdminUser`                | Admin username (and password) created as a secret if useSecurity is true | `admin`                                  |
 | `Master.Cpu`                      | Master requested cpu                 | `200m`                                                                       |
 | `Master.Memory`                   | Master requested memory              | `256Mi`                                                                      |
