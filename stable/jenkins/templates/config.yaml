@@ -70,7 +70,7 @@ data:
 {{- end }}
               </volumes>
               <containers>
-{{- range $ckey, $cval := $pval.Containers }}         
+{{- range $ckey, $cval := $pval.Containers }}
                 <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
                   <name>{{ $ckey | lower }}</name>
                   <image>{{ $cval.Image }}</image>
@@ -95,7 +95,18 @@ data:
                 </org.csanchez.jenkins.plugins.kubernetes.ContainerEnvVar>
 {{- end }}
               </envVars>
+{{- if $pval.annotations }}
+              <annotations>
+  {{- range $Akey, $Avalue := $pval.annotations }}
+                <org.csanchez.jenkins.plugins.kubernetes.PodAnnotation>
+                  <key>{{ $Akey }}</key>
+                  <value>{{ $Avalue }}</value>
+                </org.csanchez.jenkins.plugins.kubernetes.PodAnnotation>
+  {{- end }}
+              </annotations>
+{{- else }}
               <annotations/>
+{{- end }}
 {{- if $pval.ImagePullSecret }}
               <imagePullSecrets>
                 <org.csanchez.jenkins.plugins.kubernetes.PodImagePullSecret>
