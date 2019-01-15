@@ -145,6 +145,11 @@ spec:
         emptyDir: {}
       - name: secrets-dir
         emptyDir: {}
+      {{- if .Values.Master.Jobs }}
+      - name: jenkins-jobs
+        configMap:
+          name: {{ template "jenkins.fullname" . }}-jobs
+      {{- end }}
       - name: jenkins-home
       {{- if .Values.Persistence.Enabled }}
         persistentVolumeClaim:
