@@ -51,6 +51,12 @@ spec:
 {{ toYaml .Values.Master.InitContainerEnv | indent 12 }}
           {{- end }}
           volumeMounts:
+            {{- if .Values.Master.Jobs }}
+            -
+              mountPath: /var/jenkins_jobs
+              name: jenkins-jobs
+              readOnly: true
+            {{- end }}
             -
               mountPath: /var/jenkins_home
               name: jenkins-home
