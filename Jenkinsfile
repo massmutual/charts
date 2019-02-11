@@ -39,6 +39,7 @@ pipeline {
                 dir ('./charts/stable/jenkins') {
                     sh "git checkout jenkins"
                     sh "jx step git credentials"
+                    sh "git config credential.helper store"
                     sh "make release"
                 }
               }
