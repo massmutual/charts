@@ -1,45 +1,54 @@
-CHART_REPO := https://chartmuseum.jx.cd.jenkins-x.io
-NAME := jenkins
+CHART_REPO := http://jenkins-x-chartmuseum:8080
+NAME := jenkins-x
 OS := $(shell uname)
-RELEASE_VERSION := 0.10.30
+RELEASE_VERSION := $(shell jx-release-version)
+HELM := helm
 
 setup:
-	minikube addons enable ingress
-	brew install kubernetes-helm
-	helm init
+	$(HELM) repo add jenkins-x http://chartmuseum.jenkins-x.io
+	$(HELM) repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com
+	$(HELM) repo add stable https://kubernetes-charts.storage.googleapis.com
+	$(HELM) repo add monocular https://helm.github.io/monocular
 
-build: clean
-	rm -rf requirements.lock
+build: setup clean
 	helm dependency build
-	helm lint
+	$(HELM) lint
 
-install: clean build
-	helm install . --name ${NAME}
+lint:
+	helm dependency build
+	$(HELM) lint
 
-upgrade: clean build
-	helm upgrade ${NAME} .
+install: clean setup build
+	$(HELM) upgrade --debug --install $(NAME) .
+
+apply: clean setup
+	jx step helm apply $(NAME) .
+
+upgrade: clean setup build
+	$(HELM) upgrade --debug --install $(NAME) .
 
 delete:
-	helm delete --purge ${NAME}
+	$(HELM) delete --purge $(NAME)
 
 clean:
 	rm -rf charts
 	rm -rf ${NAME}*.tgz
+	rm -rf requirements.lock
 
-release: clean
-	helm dependency build
-	helm lint
+release: setup clean build
 ifeq ($(OS),Darwin)
 	sed -i "" -e "s/version:.*/version: $(RELEASE_VERSION)/" Chart.yaml
 else ifeq ($(OS),Linux)
-	echo "linux"
+	sed -i -e "s/version:.*/version: $(RELEASE_VERSION)/" Chart.yaml
 else
 	exit -1
 endif
-	# git add Chart.yaml
-	# git commit -a -m "release $(RELEASE_VERSION)"
-	# git tag -fa v$(RELEASE_VERSION) -m "Release version $(RELEASE_VERSION)"
-	# git push origin v$(RELEASE_VERSION)
-	helm package .
-	curl --fail -u $(CHARTMUSEUM_CREDS_USR):$(CHARTMUSEUM_CREDS_PSW) --data-binary "@$(NAME)-$(RELEASE_VERSION).tgz" $(CHART_REPO)/api/charts
-	rm -rf ${NAME}*.tgz%
+	git add Chart.yaml
+	git commit -a -m "release $(RELEASE_VERSION)" --allow-empty
+	git tag -fa v$(RELEASE_VERSION) -m "Release version $(RELEASE_VERSION)"
+	git push origin v$(RELEASE_VERSION)
+	$(HELM) package .
+	curl --fail -u $(CHARTMUSEUM_CREDS_USR):$(CHARTMUSEUM_CREDS_PSW) --data-binary "@$(NAME)-platform-$(RELEASE_VERSION).tgz" $(CHART_REPO)/api/charts
+	helm repo update
+	rm -rf ${NAME}*.tgz
+	echo $(RELEASE_VERSION) > VERSION
