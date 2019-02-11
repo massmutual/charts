@@ -12,8 +12,11 @@ pipeline {
             }
             steps {
               container('jxcli') {
-                  dir ('/home/jenkins/jenkins-x-platform') {
+                  dir ('./charts') {
                       checkout scm
+                  }
+
+                  dir ('./charts/stable/jenkins') {
                       sh "helm init --client-only"
 
                       sh "make build"
@@ -31,6 +34,9 @@ pipeline {
               container('jxcli') {
                 dir ('/home/jenkins/jenkins-x-platform') {
                     checkout scm
+                }
+
+                dir ('./charts/stable/jenkins') {
                     sh "git checkout master"
                     sh "jx step git credentials"
                     sh "make release"
