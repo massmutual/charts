@@ -21,6 +21,7 @@ Master:
   ServiceAccountAnnotations: {}
   Cpu: "200m"
   Memory: "256Mi"
+  Executors: 0
 # Set min/max heap here if needed with:
 # JavaOpts: "-Xms512m -Xmx512m"
 # JenkinsOpts: ""
