@@ -28,11 +28,11 @@ pipeline {
 
         stage('Build and Push Release') {
             when {
-                branch 'master'
+                branch 'jenkins'
             }
             steps {
               container('jxcli') {
-                dir ('/home/jenkins/jenkins-x-platform') {
+                dir ('./charts') {
                     checkout scm
                 }
 
