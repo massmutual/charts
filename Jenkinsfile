@@ -37,7 +37,7 @@ pipeline {
                 }
 
                 dir ('./charts/stable/jenkins') {
-                    sh "git checkout master"
+                    sh "git checkout jenkins"
                     sh "jx step git credentials"
                     sh "make release"
                 }
