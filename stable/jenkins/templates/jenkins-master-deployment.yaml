@@ -51,6 +51,12 @@ spec:
 {{ toYaml .Values.Master.InitContainerEnv | indent 12 }}
           {{- end }}
           volumeMounts:
+            {{- if .Values.Master.Jobs }}
+            -
+              mountPath: /var/jenkins_jobs
+              name: jenkins-jobs
+              readOnly: true
+            {{- end }}
             -
               mountPath: /var/jenkins_home
               name: jenkins-home
@@ -122,6 +128,12 @@ spec:
 {{- if .Values.Persistence.mounts }}
 {{ toYaml .Values.Persistence.mounts | indent 12 }}
 {{- end }}
+            {{- if .Values.Master.Jobs }}
+            -
+              mountPath: /var/jenkins_jobs
+              name: jenkins-jobs
+              readOnly: true
+            {{- end }}
             -
               mountPath: /var/jenkins_home
               name: jenkins-home
@@ -145,6 +157,11 @@ spec:
         emptyDir: {}
       - name: secrets-dir
         emptyDir: {}
+      {{- if .Values.Master.Jobs }}
+      - name: jenkins-jobs
+        configMap:
+          name: {{ template "jenkins.fullname" . }}-jobs
+      {{- end }}
       - name: jenkins-home
       {{- if .Values.Persistence.Enabled }}
         persistentVolumeClaim:
